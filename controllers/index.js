@@ -1,4 +1,5 @@
 'use strict';
+const e = require('express');
 const { sensors} = require('../models');
 const { Op } = require("sequelize");
 module.exports = {
@@ -23,15 +24,16 @@ module.exports = {
             let value4 = 0;
             let value5 = 0;
             let count = 0;
-            let hour = -2;
+            let hour = -1;
+            let id = 0;
             let average = [];
             for (let i = 0; i < data.length; i++) {
                 // console.log(data[i].created_at.getHours());
 
-                if (hour == 0) {
-                    hour = data[i].created_at.getHours();
-                    console.log(hour);
-                }
+                // if (hour == 0) {
+                //     hour = data[i].created_at.getHours();
+                //     console.log(hour);
+                // }
                 if (hour == data[i].created_at.getHours()) {
                     value1 += data[i].value1;
                     value2 += data[i].value2;
@@ -50,7 +52,7 @@ module.exports = {
                     count = 1;
                     console.log(hour);
                     average.push({
-                        hour: hour,
+                        name: hour,
                         value1: (value1 / count).toFixed(2),
                         value2: (value2 / count).toFixed(2),
                         value3: (value3 / count).toFixed(2),
@@ -59,6 +61,19 @@ module.exports = {
                     });
                 }
                 
+            }
+            for (let i = 0; i < average.length; i++) {
+                console.log(average[i]);
+                //   convert name to string hh:mm 
+                average[i].id = i + 1;
+                let jam = average[i].name;
+                if (jam < 10) {
+                    jam = '0' + jam + ':00';
+                } else {
+                    jam = '' + jam + ':00';
+                }
+                average[i].name = jam;
+
             }
             return res.status(200).json({
                 status: true,
