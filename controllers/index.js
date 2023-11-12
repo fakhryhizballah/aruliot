@@ -100,7 +100,7 @@ module.exports = {
             let data = await sensors.findAll({
                 where: {
                     created_at: {
-                        // [Op.between]: [mulai, end]
+                        [Op.between]: [mulai, end]
                     }
                 },
                 order: [
