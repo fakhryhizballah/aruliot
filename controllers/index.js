@@ -1,5 +1,4 @@
 'use strict';
-const e = require('express');
 const { sensors} = require('../models');
 const { Op } = require("sequelize");
 const moment = require('moment-timezone');
@@ -8,12 +7,21 @@ console.log('Zona Waktu:', timeZone);
 module.exports = {
     getAverage: async (req, res) => {
         try {
+        let start = new Date(req.query.start); 
+        console.log(start);
+        console.log(start+7 * 60 * 60 * 1000);
+        // start.setHours(start.getHours()+14);
+        // console.log(start);
+        // let end = new Date(req.query.start);
+        // // get start yyyy-mm-dd 
+        // // let startDay = start.toISOString().slice(0, 10);
+        // // console.log(startDay);
+
             let data = await sensors.findAll({
-                // attributes: [
-                // ],
                 where: {
                     created_at: {
-                        [Op.startsWith]: req.query.start
+                        [Op.lte]: new Date(req.query.start),  // < 2021-05-01 00:00:00
+                        [Op.gte]: new Date(req.query.start)  // > 2021-05-01 00:00:00
                     }
                 },
                 order: [
@@ -27,10 +35,14 @@ module.exports = {
             let value4 = 0;
             let value5 = 0;
             let count = 0;
-            let hour = -1;
+            let hour = 0;
             let id = 0;
             let average = [];
             for (let i = 0; i < data.length; i++) {
+                let newDate = data[i].created_at;
+                newDate.setHours(newDate.getHours() + 14);
+                data[i].created_at = newDate;
+                data[i].updated_at = newDate;
                 if (hour == data[i].created_at.getHours()) {
                     value1 += data[i].value1;
                     value2 += data[i].value2;
@@ -47,7 +59,6 @@ module.exports = {
                     value4 = data[i].value4;
                     value5 = data[i].value5;
                     count = 1;
-                    console.log(hour);
                     average.push({
                         name: hour,
                         value1: (value1 / count).toFixed(2),
@@ -60,7 +71,6 @@ module.exports = {
 
             }
             for (let i = 0; i < average.length; i++) {
-                console.log(average[i]);
                 //   convert name to string hh:mm 
                 average[i].id = i + 1;
                 let jam = average[i].name;
@@ -89,18 +99,10 @@ module.exports = {
     },
     getAverageDay: async (req, res) => {
         try {
-            console.log(req.query.start);
-            console.log(req.query.end);
-            let start = new Date(req.query.start);
-            let end = new Date(req.query.end);
-            console.log(start);
-            console.log(moment(req.query.start).tz('Asia/Pontianak').toDate());
-            console.log(moment(start).tz('Asia/Pontianak').toDate());
-            let mulai = moment(start).tz('Asia/Pontianak').toDate();
             let data = await sensors.findAll({
                 where: {
-                    created_at: {
-                        [Op.between]: [mulai, end]
+                    updated_at: {
+                        [Op.between]: [req.query.start, req.query.end]
                     }
                 },
                 order: [
@@ -120,6 +122,10 @@ module.exports = {
             let id = 0;
             let average = [];
             for (let i = 0; i < data.length; i++) {
+                let newDate = data[i].created_at;
+                newDate.setHours(newDate.getHours() + 14);
+                data[i].created_at = newDate;
+                data[i].updated_at = newDate;
                 if (day == data[i].created_at.getDate()) {
                     value1 += data[i].value1;
                     value2 += data[i].value2;
@@ -136,8 +142,11 @@ module.exports = {
                     value4 = data[i].value4;
                     value5 = data[i].value5;
                     count = 1;
-                    // get yyyy-mm-dd from data[i].created_at
-                    tanggal = moment.utc(data[i].created_at).tz('Asia/Jakarta').format('YYYY-MM-DD');
+                    // get yyyy-mm-dd from data[i].created_at + 14 hours
+                    tanggal = data[i].created_at.toISOString().split('T')[0];
+                
+                    console.log(tanggal);
+                    
                     average.push({
                         name: tanggal,
                         value1: (value1 / count).toFixed(2),

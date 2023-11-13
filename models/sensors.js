@@ -24,10 +24,8 @@ module.exports = (sequelize, DataTypes) => {
     value3: DataTypes.DOUBLE(8, 2),
     value4: DataTypes.DOUBLE(8, 2),
     value5: DataTypes.DOUBLE(8, 2),
-      created_at: {
-          type: DataTypes.DATE
-      },
-      updated_at: DataTypes.DATE,
+    created_at:DataTypes.DATE,
+    updated_at: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'sensors',

@@ -14,10 +14,10 @@ module.exports = {
         "database": DB_NAME,
         "host": DB_HOST,
         "dialect": DB_DIALECT,
-        dialectOptions: {
-            useUTC: false, // for reading from database
-        },
-        timezone: '+05:30', // for writing to database
+        // "dialectOptions": {
+        //     useUTC: true, // for reading from database
+        // },
+        // "timezone": '+00:00', // for writing to database
     },
     "test": {
         "username": DB_USERNAME,
@@ -25,10 +25,10 @@ module.exports = {
         "database": DB_NAME,
         "host": DB_HOST,
         "dialect": DB_DIALECT,
-        dialectOptions: {
-            useUTC: false, // for reading from database
-        },
-        timezone: '+05:30', // for writing to database
+        // dialectOptions: {
+        //     useUTC: false, // for reading from database
+        // },
+        // timezone: '+00:00', // for writing to database
     },
     "production": {
         "username": DB_USERNAME,
@@ -36,9 +36,9 @@ module.exports = {
         "database": DB_NAME,
         "host": DB_HOST,
         "dialect": DB_DIALECT,
-        dialectOptions: {
-            useUTC: false, // for reading from database
-        },
-        timezone: '+05:30', // for writing to database
+        // dialectOptions: {
+        //     useUTC: false, // for reading from database
+        // },
+        // timezone: '+00:00', // for writing to database
     }
 };
