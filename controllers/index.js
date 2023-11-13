@@ -87,7 +87,7 @@ module.exports = {
                 status: true,
                 message: 'Success',
                 data: average,
-                raw: data
+                // raw: data
             });
         } catch (error) {
             console.log(error);
