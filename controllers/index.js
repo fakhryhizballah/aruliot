@@ -8,9 +8,7 @@ module.exports = {
     getAverage: async (req, res) => {
         try {
         let start = new Date(req.query.start); 
-        console.log(start);
-        console.log(start+7 * 60 * 60 * 1000);
-        // start.setHours(start.getHours()+14);
+        start.setHours(start.getHours()-7);
         // console.log(start);
         // let end = new Date(req.query.start);
         // // get start yyyy-mm-dd 
@@ -20,8 +18,10 @@ module.exports = {
             let data = await sensors.findAll({
                 where: {
                     created_at: {
-                        [Op.lte]: new Date(req.query.start),  // < 2021-05-01 00:00:00
-                        [Op.gte]: new Date(req.query.start)  // > 2021-05-01 00:00:00
+                        [Op.gte]: new Date(start), // > 2021-05-01 00:00:00
+                        // start day + 1
+                        [Op.lt]: new Date(start.setDate(start.getDate() + 1)), // < 2021-05-02 00:00:00
+                        // [Op.lte]: new Date(req.query.start),  // < 2021-05-01 00:00:00 
                     }
                 },
                 order: [
@@ -35,7 +35,7 @@ module.exports = {
             let value4 = 0;
             let value5 = 0;
             let count = 0;
-            let hour = 0;
+            let hour = -1;
             let id = 0;
             let average = [];
             for (let i = 0; i < data.length; i++) {
@@ -43,7 +43,8 @@ module.exports = {
                 newDate.setHours(newDate.getHours() + 14);
                 data[i].created_at = newDate;
                 data[i].updated_at = newDate;
-                if (hour == data[i].created_at.getHours()) {
+                console.log(newDate.getUTCHours());
+                if (hour == data[i].created_at.getUTCHours()) {
                     value1 += data[i].value1;
                     value2 += data[i].value2;
                     value3 += data[i].value3;
@@ -51,8 +52,8 @@ module.exports = {
                     value5 += data[i].value5;
                     count++;
                 } else {
-
-                    hour = data[i].created_at.getHours();
+                    hour = data[i].created_at.getUTCHours();
+                    console.log(hour);
                     value1 = data[i].value1;
                     value2 = data[i].value2;
                     value3 = data[i].value3;
