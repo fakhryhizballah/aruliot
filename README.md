@@ -57,3 +57,14 @@ DB_DIALECT=mariadb
 | :-------- | :------- | :-------------------------------- |
 | `start`      | `string` | **Required**. Date yyyy-mm-dd |
 | `end`      | `string` | **Required**. Date yyyy-mm-dd |
+
+### Get average in 1 day / month
+
+```http
+  GET /api/iot/average/month
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `start`      | `string` | **Required**. Date yyyy-mm |
+

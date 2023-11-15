@@ -188,19 +188,36 @@ module.exports = {
     },
     getAverageMonth: async (req, res) => {
         try {
+            let { start } = req.query
+            // let start month
+
+
+            let data = await sensors.findAll({
+                where: {
+                    created_at: {
+                        [Op.gte]: (start + '-01'), // > 2021-05-01 00:00:00
+                        [Op.lt]: (start + '-30'), // < 2021-05-02 00:00:00
+                        // [Op.gte]: new Date(start + '-01'), // > 2021-05-01 00:00:00
+                        // [Op.lt]: new Date(start + '-30'), // < 2021-05-02 00:00:00
+                    }
+                },
+                order: [
+                    ['created_at', 'ASC'],
+                ],
+            });
             return res.status(200).json({
                 status: true,
                 message: 'Success',
-                data: null,
+                data: data,
 
             });
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            status: false,
-            message: 'Internal Server Error',
-            data: error
-        });
-    }
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                status: false,
+                message: 'Internal Server Error',
+                data: error
+            });
+        }
     },
 }
