@@ -175,7 +175,7 @@ module.exports = {
                 status: true,
                 message: 'Success',
                 data: average,
-                raw: data
+                // raw: data
             });
         } catch (error) {
             console.log(error);
@@ -185,5 +185,22 @@ module.exports = {
                 data: error
             });
         }
+    },
+    getAverageMonth: async (req, res) => {
+        try {
+            return res.status(200).json({
+                status: true,
+                message: 'Success',
+                data: null,
+
+            });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: false,
+            message: 'Internal Server Error',
+            data: error
+        });
     }
+    },
 }
