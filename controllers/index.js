@@ -67,8 +67,7 @@ module.exports = {
             return res.status(200).json({
                 status: true,
                 message: 'Success',
-                data: average,
-                raw: data
+                data: average
             });
         } catch (error) {
             console.log(error);
