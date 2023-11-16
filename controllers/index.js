@@ -5,7 +5,6 @@ module.exports = {
     getAverage: async (req, res) => {
         try {
             let { start } = req.query
-            // let start month
             let data = await sensors.findAll({
                 attributes: [
                     "id",
@@ -30,10 +29,10 @@ module.exports = {
             let value4 = 0;
             let value5 = 0;
             let count = 0;
-            let hour;
+            let hour = "";
             let average = [];
             for (let i = 0; i < data.length; i++) {
-                let jam = data[i].created_at.slice(11, 13);
+                let jam = data[i].created_at.slice(11, 14);
                 // Tanggal dan waktu yang diberikan
                 if (hour == jam) {
                     value1 += data[i].value1;
