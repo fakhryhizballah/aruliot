@@ -243,6 +243,9 @@ module.exports = {
                     });
                 }
             }
+            for (let i = 0; i < average.length; i++) {
+                average[i].id = i + 1;
+            }
             return res.status(200).json({
                 status: true,
                 message: 'Success',
@@ -258,4 +261,81 @@ module.exports = {
             });
         }
     },
+    getAverageYear: async (req, res) => {
+        try {
+            let { start } = req.query
+            // let start month
+            let data = await sensors.findAll({
+                attributes: [
+                    "id",
+                    "value1",
+                    "value2",
+                    "value3",
+                    "value4",
+                    "value5",
+                    "created_at"
+                ],
+                where: {
+                    created_at: { [Op.startsWith]: start }
+                },
+                order: [
+                    ['created_at', 'ASC'],
+                ],
+            });
+            let value1 = 0;
+            let value2 = 0;
+            let value3 = 0;
+            let value4 = 0;
+            let value5 = 0;
+            let count = 0;
+            let month;
+            let average = [];
+            for (let i = 0; i < data.length; i++) {
+                console.log(data[i].created_at);
+                let monthnow = data[i].created_at.slice(3, 5);
+                console.log(month);
+                if (month == monthnow) {
+                    value1 += data[i].value1;
+                    value2 += data[i].value2;
+                    value3 += data[i].value3;
+                    value4 += data[i].value4;
+                    value5 += data[i].value5;
+                    count++;
+                } else {
+
+                    month = monthnow;
+                    value1 = data[i].value1;
+                    value2 = data[i].value2;
+                    value3 = data[i].value3;
+                    value4 = data[i].value4;
+                    value5 = data[i].value5;
+                    count = 1;
+                    average.push({
+                        id: i + 1,
+                        name: data[i].created_at.slice(3, 10),
+                        value1: (value1 / count).toFixed(2),
+                        value2: (value2 / count).toFixed(2),
+                        value3: (value3 / count).toFixed(2),
+                        value4: (value4 / count).toFixed(2),
+                        value5: (value5 / count).toFixed(2),
+                    });
+                }
+            }
+            for (let i = 0; i < average.length; i++) {
+                average[i].id = i + 1;
+            }
+            return res.status(200).json({
+                status: true,
+                message: 'Success',
+                data: average,
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                status: false,
+                message: 'Internal Server Error',
+                data: error
+            });
+        }
+    }
 }
