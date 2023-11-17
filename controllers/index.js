@@ -142,7 +142,7 @@ module.exports = {
             for (let i = 0; i < average.length; i++) {
                 //   convert name to string hh:mm
                 average[i].id = i + 1;
-                average[i].name = 1 + i + " Minggu";
+                average[i].name = 1 + i;
             }
             return res.status(200).json({
                 status: true,
