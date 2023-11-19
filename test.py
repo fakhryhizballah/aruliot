@@ -8,7 +8,7 @@ db_config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'db_weon',
+    'database': 'sensors',
 }
 connection = mysql.connector.connect(**db_config)
 
